@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Technologies from '../components/Technologies.astro';
+import Projects from '../components/Projects.astro';
+import Contact from '../components/Contact.astro';
+
+const title = 'Álvaro Gutiérrez García — Desarrollador de software (.NET · Angular · IA)';
+const description =
+  'Desarrollador de software en ICCA (Córdoba). Construyo con .NET y Angular y aplico Machine Learning, Computer Vision y LLMs a problemas reales, con un pie en la ingeniería y otro en el deporte.';
+---
+
+<Layout title={title} description={description}>
+  {/*
+    Página principal (one-page). Cada sección es un componente con su propio
+    anclaje (#sobre-mi, #experiencia, #tecnologias, #proyectos, #contacto),
+    enlazado desde la barra de navegación con scroll suave.
+  */}
+
+  <Hero />
+
+  <About />
+
+  <Experience />
+
+  <Technologies />
+
+  <Projects />
+
+  <Contact />
+</Layout>

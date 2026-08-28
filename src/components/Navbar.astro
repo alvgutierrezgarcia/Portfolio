@@ -1,0 +1,326 @@
+---
+const links = [
+  { href: '#inicio', label: 'Inicio' },
+  { href: '#sobre-mi', label: 'Sobre mí' },
+  { href: '#experiencia', label: 'Experiencia' },
+  { href: '#tecnologias', label: 'Tecnologías' },
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+
+<header class="nav" data-nav>
+  <nav class="nav__inner container" aria-label="Navegación principal">
+    <a class="brand" href="#inicio">
+      Álvaro<span class="brand__dot" aria-hidden="true">.</span>
+    </a>
+
+    <ul class="nav__links" id="nav-menu">
+      {
+        links.map((link) => (
+          <li>
+            <a href={link.href} data-nav-link>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="nav__actions">
+      <button
+        type="button"
+        class="theme-toggle"
+        data-theme-toggle
+        aria-label="Cambiar tema claro/oscuro"
+        title="Cambiar tema"
+      >
+        <span class="theme-toggle__icon sun" aria-hidden="true">☀️</span>
+        <span class="theme-toggle__icon moon" aria-hidden="true">🌙</span>
+      </button>
+
+      <button
+        type="button"
+        class="nav__burger"
+        data-nav-burger
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="nav-menu"
+      >
+        <span class="nav__burger-box" aria-hidden="true">
+          <span class="nav__burger-line"></span>
+          <span class="nav__burger-line"></span>
+          <span class="nav__burger-line"></span>
+        </span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: saturate(140%) blur(12px);
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color var(--transition),
+      background-color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  /* Sutil realce al hacer scroll */
+  .nav.is-scrolled {
+    border-bottom-color: var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    height: var(--nav-height);
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-lg);
+    letter-spacing: var(--tracking-tight);
+    color: var(--text);
+  }
+  .brand:hover {
+    color: var(--text);
+  }
+  .brand__dot {
+    color: var(--accent);
+  }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin: 0;
+  }
+
+  .nav__links a {
+    position: relative;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    padding: var(--space-1) 0;
+  }
+  .nav__links a:hover {
+    color: var(--text);
+  }
+  /* Sección activa (scroll-spy): texto resaltado + subrayado fijo */
+  .nav__links a.is-active {
+    color: var(--text);
+  }
+  /* Subrayado animado (movimiento sutil) */
+  .nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: var(--accent);
+    border-radius: var(--radius-full);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition);
+  }
+  .nav__links a:hover::after,
+  .nav__links a.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .nav__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 1.05rem;
+    line-height: 1;
+    transition:
+      background-color var(--transition),
+      border-color var(--transition),
+      transform var(--transition);
+  }
+  .theme-toggle:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+  .theme-toggle__icon {
+    display: none;
+  }
+  /* Oscuro: mostramos el sol (indica "cambiar a claro"). */
+  .theme-toggle .sun {
+    display: block;
+  }
+  :global(:root[data-theme='light']) .theme-toggle .sun {
+    display: none;
+  }
+  :global(:root[data-theme='light']) .theme-toggle .moon {
+    display: block;
+  }
+
+  /* --- Hamburguesa (oculta en escritorio) --- */
+  .nav__burger {
+    display: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .nav__burger-box {
+    display: grid;
+    gap: 5px;
+    width: 18px;
+  }
+  .nav__burger-line {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--text);
+    border-radius: var(--radius-full);
+    transition:
+      transform var(--transition),
+      opacity var(--transition);
+  }
+  /* Animación a "X" cuando el menú está abierto */
+  .nav__burger[aria-expanded='true'] .nav__burger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav__burger[aria-expanded='true'] .nav__burger-line:nth-child(2) {
+    opacity: 0;
+  }
+  .nav__burger[aria-expanded='true'] .nav__burger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ======================= MÓVIL ======================= */
+  @media (max-width: 768px) {
+    .nav__burger {
+      display: grid;
+    }
+
+    .nav__links {
+      position: absolute;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: var(--space-2) var(--page-x) var(--space-4);
+      background: color-mix(in srgb, var(--bg) 96%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+
+      /* Oculto por defecto, con transición sutil */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition:
+        opacity var(--transition),
+        transform var(--transition),
+        visibility var(--transition);
+    }
+
+    .nav.is-open .nav__links {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .nav__links a {
+      display: block;
+      padding: var(--space-3) 0;
+      font-size: var(--fs-base);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav__links li:last-child a {
+      border-bottom: none;
+    }
+    .nav__links a::after {
+      display: none;
+    }
+    .nav__links a.is-active {
+      color: var(--accent);
+    }
+  }
+</style>
+
+<script>
+  // --- Toggle de tema (persistente en localStorage) ---
+  const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  toggle?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const isLight = root.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      root.removeAttribute('data-theme');
+      try {
+        localStorage.setItem('theme', 'dark');
+      } catch {}
+    } else {
+      root.setAttribute('data-theme', 'light');
+      try {
+        localStorage.setItem('theme', 'light');
+      } catch {}
+    }
+  });
+
+  // --- Menú móvil (hamburguesa) ---
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const burger = document.querySelector<HTMLButtonElement>('[data-nav-burger]');
+
+  const closeMenu = () => {
+    nav?.classList.remove('is-open');
+    burger?.setAttribute('aria-expanded', 'false');
+    burger?.setAttribute('aria-label', 'Abrir menú');
+  };
+
+  burger?.addEventListener('click', () => {
+    const willOpen = !nav?.classList.contains('is-open');
+    nav?.classList.toggle('is-open', willOpen);
+    burger.setAttribute('aria-expanded', String(willOpen));
+    burger.setAttribute('aria-label', willOpen ? 'Cerrar menú' : 'Abrir menú');
+  });
+
+  // Cerrar el menú al pulsar un enlace o la tecla Escape
+  document.querySelectorAll('[data-nav-link]').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  // --- Realce sutil de la nav al hacer scroll ---
+  const onScroll = () => {
+    nav?.classList.toggle('is-scrolled', window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

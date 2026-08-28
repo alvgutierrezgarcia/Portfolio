@@ -1,0 +1,331 @@
+---
+import { LINKEDIN_URL } from '../data/contact';
+
+const cvUrl = '/cv-alvaro-gutierrez-garcia.pdf';
+const linkedinUrl = LINKEDIN_URL;
+---
+
+<section id="inicio" class="hero" aria-labelledby="hero-title">
+  <!-- Fondo con movimiento sutil (mesh gradient). Decorativo → aria-hidden. -->
+  <div class="hero__bg" aria-hidden="true">
+    <span class="blob blob--1"></span>
+    <span class="blob blob--2"></span>
+    <span class="blob blob--3"></span>
+    <span class="hero__grid"></span>
+  </div>
+
+  <div class="hero__content container">
+    <p class="hero__badge">
+      <span class="hero__dot" aria-hidden="true"></span>
+      Disponible para proyectos
+    </p>
+
+    <h1 id="hero-title" class="hero__title">
+      Hola, soy <span class="accent">Álvaro</span>
+    </h1>
+
+    <p class="hero__subtitle">
+      Desarrollador de software (.NET · Angular) e IA aplicada al deporte
+    </p>
+
+    <p class="hero__desc">
+      Construyo software y aplico Machine Learning, Computer Vision y LLMs a
+      problemas reales, con un pie en la ingeniería y otro en el deporte.
+    </p>
+
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="#proyectos">
+        Ver proyectos
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+
+      <a class="btn btn--secondary" href={cvUrl} download>
+        Descargar CV
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+        </svg>
+      </a>
+
+      <a
+        class="btn btn--ghost"
+        href={linkedinUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+        </svg>
+        LinkedIn
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    min-height: calc(100svh - var(--nav-height));
+    padding-block: var(--space-8);
+  }
+
+  /* --- Contenido --- */
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 62ch;
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--surface) 65%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    color: var(--text-muted);
+    margin-bottom: var(--space-5);
+  }
+
+  .hero__dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px var(--success-soft);
+  }
+  /* Halo pulsante del puntito verde */
+  .hero__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--success);
+    animation: dot-pulse 2.4s ease-out infinite;
+  }
+  @keyframes dot-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    80%,
+    100% {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+  }
+
+  .hero__title {
+    font-size: clamp(2.75rem, 1.6rem + 5vw, 4.75rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-4);
+  }
+  .hero__title .accent {
+    color: var(--accent);
+  }
+
+  .hero__subtitle {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 1rem + 0.8vw, 1.5rem);
+    font-weight: var(--fw-medium);
+    color: var(--text);
+    line-height: var(--lh-snug);
+    max-width: 36ch;
+    margin-bottom: var(--space-4);
+  }
+
+  .hero__desc {
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+    max-width: 54ch;
+    margin-bottom: var(--space-6);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  /* Entrada escalonada del contenido al cargar (solo con JS y sin reduced-motion).
+     Sin JS o con reduced-motion, el contenido se muestra normal, sin animación. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .hero__badge,
+    :global(html.js) .hero__title,
+    :global(html.js) .hero__subtitle,
+    :global(html.js) .hero__desc,
+    :global(html.js) .hero__actions {
+      animation: hero-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    }
+    :global(html.js) .hero__badge {
+      animation-delay: 0.05s;
+    }
+    :global(html.js) .hero__title {
+      animation-delay: 0.15s;
+    }
+    :global(html.js) .hero__subtitle {
+      animation-delay: 0.25s;
+    }
+    :global(html.js) .hero__desc {
+      animation-delay: 0.35s;
+    }
+    :global(html.js) .hero__actions {
+      animation-delay: 0.45s;
+    }
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ======================= FONDO (mesh gradient) ======================= */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    /* Difumina los bordes para que el degradado funda con el fondo */
+    -webkit-mask-image: radial-gradient(
+      130% 100% at 30% 25%,
+      #000 42%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      130% 100% at 30% 25%,
+      #000 42%,
+      transparent 100%
+    );
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    will-change: transform;
+  }
+  .blob--1 {
+    width: min(46vw, 620px);
+    height: min(46vw, 620px);
+    top: -12%;
+    left: -6%;
+    background: radial-gradient(circle at center, var(--accent), transparent 68%);
+    animation: drift-1 24s ease-in-out infinite alternate;
+  }
+  .blob--2 {
+    width: min(42vw, 560px);
+    height: min(42vw, 560px);
+    top: -8%;
+    right: -8%;
+    background: radial-gradient(circle at center, #22d3ee, transparent 68%);
+    opacity: 0.42;
+    animation: drift-2 28s ease-in-out infinite alternate;
+  }
+  .blob--3 {
+    width: min(48vw, 640px);
+    height: min(48vw, 640px);
+    bottom: -28%;
+    left: 22%;
+    background: radial-gradient(circle at center, #8b5cf6, transparent 68%);
+    opacity: 0.34;
+    animation: drift-3 32s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift-1 {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(8%, 10%, 0) scale(1.12);
+    }
+  }
+  @keyframes drift-2 {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(-10%, 8%, 0) scale(1.08);
+    }
+  }
+  @keyframes drift-3 {
+    from {
+      transform: translate3d(0, 0, 0) scale(1.05);
+    }
+    to {
+      transform: translate3d(6%, -8%, 0) scale(0.95);
+    }
+  }
+
+  /* Rejilla técnica muy sutil por encima del degradado */
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    -webkit-mask-image: radial-gradient(
+      100% 80% at 30% 20%,
+      #000 0%,
+      transparent 75%
+    );
+    mask-image: radial-gradient(100% 80% at 30% 20%, #000 0%, transparent 75%);
+  }
+
+  /* En tema claro el degradado se atenúa para no saturar */
+  :global(:root[data-theme='light']) .blob {
+    opacity: 0.3;
+  }
+  :global(:root[data-theme='light']) .blob--2,
+  :global(:root[data-theme='light']) .blob--3 {
+    opacity: 0.22;
+  }
+
+  /* prefers-reduced-motion: el sistema global ya detiene las animaciones;
+     dejamos el fondo estático de forma explícita para que quede claro. */
+  @media (prefers-reduced-motion: reduce) {
+    .blob,
+    .hero__dot::after {
+      animation: none;
+    }
+    .hero__dot::after {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      min-height: calc(100svh - var(--nav-height));
+      padding-block: var(--space-7);
+    }
+    .hero__actions {
+      width: 100%;
+    }
+    .hero__actions .btn {
+      flex: 1 1 auto;
+    }
+  }
+</style>

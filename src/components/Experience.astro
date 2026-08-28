@@ -1,0 +1,228 @@
+---
+// Fechas del máster aún por confirmar con exactitud: ajusta --master-years
+// cuando las tengas (por ahora asume que sigue en curso, como en "Sobre mí").
+const masterYears = '2024 – Actualidad';
+
+type Milestone = {
+  role: string;
+  place: string;
+  dates: string;
+  current?: boolean;
+  note?: string;
+};
+
+const milestones: Milestone[] = [
+  {
+    role: 'Desarrollador de software',
+    place: 'ICCA, Córdoba',
+    dates: 'julio 2024 – Actualidad',
+    current: true,
+  },
+  {
+    role: 'Máster en Big Data e IA aplicada al deporte',
+    place: 'Sports Data Campus · Olocip · UCAM',
+    dates: masterYears,
+  },
+  {
+    role: 'Ingeniería Informática',
+    place: 'Universidad de Córdoba',
+    dates: '2020 – 2024',
+    note: 'Erasmus — Politechnika Opolska, Opole (Polonia) · 2022',
+  },
+];
+---
+
+<section id="experiencia" class="experience">
+  <div class="container">
+    <header class="section-head reveal">
+      <span class="section-head__num">02</span>
+      <h2 class="section-head__title">Experiencia</h2>
+    </header>
+
+    <ol class="timeline">
+      {
+        milestones.map((m, i) => (
+          <li class="timeline__item reveal" style={`--reveal-delay:${i * 120}ms`}>
+            <span
+              class:list={['timeline__dot', m.current && 'timeline__dot--current']}
+              aria-hidden="true"
+            />
+            <div class="timeline__card">
+              <div class="timeline__head">
+                <h3 class="timeline__role">{m.role}</h3>
+                {m.current && <span class="timeline__badge">Actual</span>}
+              </div>
+              <p class="timeline__place">{m.place}</p>
+              <p class="timeline__dates">{m.dates}</p>
+              {m.note && (
+                <p class="timeline__note">
+                  <span class="timeline__note-connector" aria-hidden="true" />
+                  {m.note}
+                </p>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .experience {
+    padding-block: var(--space-9);
+    scroll-margin-top: var(--nav-height);
+  }
+
+  .timeline {
+    position: relative;
+    max-width: var(--container-narrow);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Línea vertical */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 7px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--border) 70%);
+    opacity: 0.5;
+  }
+
+  .timeline__item {
+    position: relative;
+    list-style: none;
+    padding-left: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
+  .timeline__item:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline__dot {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    z-index: 1;
+  }
+  /* Hito actual: punto relleno con halo pulsante, como el badge del Hero */
+  .timeline__dot--current {
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .timeline__dot--current::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: dot-pulse 2.4s ease-out infinite;
+  }
+  @keyframes dot-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    80%,
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+
+  .timeline__card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    transition:
+      border-color var(--transition),
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+  .timeline__card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .timeline__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-1);
+  }
+
+  .timeline__role {
+    font-size: var(--fs-lg);
+    line-height: var(--lh-snug);
+  }
+
+  .timeline__badge {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--accent-contrast);
+    background: var(--accent);
+    padding: 0.15em 0.6em;
+    border-radius: var(--radius-full);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .timeline__place {
+    color: var(--text-muted);
+    font-weight: var(--fw-medium);
+  }
+
+  .timeline__dates {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--text-faint);
+    margin-top: var(--space-1);
+  }
+
+  /* Nota anidada (Erasmus dentro de Ingeniería Informática) */
+  .timeline__note {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    padding-left: var(--space-5);
+    border-top: 1px dashed var(--border);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  .timeline__note-connector {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-left: 1.5px solid var(--border-strong);
+    border-bottom: 1.5px solid var(--border-strong);
+    border-radius: 0 0 0 4px;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 480px) {
+    .timeline__item {
+      padding-left: var(--space-6);
+    }
+    .timeline__card {
+      padding: var(--space-4);
+    }
+  }
+</style>

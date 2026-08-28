@@ -1,0 +1,209 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Ruta relativa a /public para la imagen Open Graph (opcional). */
+  image?: string;
+}
+
+const {
+  title = 'Álvaro Gutiérrez García — Desarrollador de software',
+  description = 'Portfolio de Álvaro Gutiérrez García, desarrollador de software en ICCA (Córdoba), especializado en desarrollo con IA, .NET, Angular e IA aplicada al deporte.',
+  image = '/og.png',
+} = Astro.props;
+
+// URL canónica y absolutas para SEO / Open Graph.
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
+const siteURL = Astro.site?.href ?? canonicalURL.href;
+
+// Datos estructurados (JSON-LD) tipo Person.
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Álvaro Gutiérrez García',
+  givenName: 'Álvaro',
+  familyName: 'Gutiérrez García',
+  jobTitle: 'Desarrollador de software',
+  description,
+  url: siteURL,
+  image: socialImage.href,
+  email: `mailto:${EMAIL}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Córdoba',
+    addressCountry: 'ES',
+  },
+  worksFor: {
+    '@type': 'Organization',
+    name: 'ICCA — Ingeniería y Consultoría para el Control Automático',
+  },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Universidad de Córdoba' },
+    { '@type': 'EducationalOrganization', name: 'Sports Data Campus · UCAM · OLOCIP' },
+  ],
+  knowsAbout: [
+    'Inteligencia Artificial',
+    '.NET',
+    'Angular',
+    'Machine Learning',
+    'Computer Vision',
+    'LLMs',
+    'IA aplicada al deporte',
+  ],
+  sameAs: [LINKEDIN_URL, GITHUB_URL].filter((u) => u && u !== '#'),
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Anti-FOUC: fija el tema ANTES del primer pintado, sin parpadeo. -->
+    <script is:inline>
+      // Marca que hay JS disponible (habilita las animaciones de reveal sin
+      // dejar contenido oculto cuando el JS no carga).
+      document.documentElement.classList.add('js');
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme =
+            stored ||
+            (window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light'
+              : 'dark');
+          if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {
+          /* localStorage no disponible: nos quedamos con el tema oscuro por defecto */
+        }
+      })();
+    </script>
+
+    <!-- SEO base -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="theme-color" content="#0b0d10" />
+    <meta name="author" content="Álvaro Gutiérrez García" />
+
+    <!-- Iconos -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Álvaro Gutiérrez García — Desarrollador de software" />
+    <meta property="og:site_name" content="Álvaro Gutiérrez García" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="Álvaro Gutiérrez García — Desarrollador de software" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Datos estructurados: Person -->
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#inicio">Saltar al contenido</a>
+    <Navbar />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      const supportsIO = 'IntersectionObserver' in window;
+
+      // 1) Aparición suave de los elementos .reveal al entrar en el viewport.
+      const els = document.querySelectorAll<HTMLElement>('.reveal');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!supportsIO || reduce || !els.length) {
+        els.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+        );
+        els.forEach((el) => io.observe(el));
+      }
+
+      // 2) Scroll-spy: resalta en el nav la sección visible (sin listeners de scroll).
+      const navLinks = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>('.nav__links a[href^="#"]')
+      );
+      const sectionIds = navLinks.map((a) => a.hash.slice(1));
+      const sections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => !!el);
+
+      if (supportsIO && sections.length) {
+        const navH =
+          (document.querySelector('.nav') as HTMLElement | null)?.offsetHeight ?? 64;
+        const visible = new Set<string>();
+
+        const setActive = (id: string) => {
+          for (const a of navLinks) {
+            const on = a.hash.slice(1) === id;
+            a.classList.toggle('is-active', on);
+            if (on) a.setAttribute('aria-current', 'true');
+            else a.removeAttribute('aria-current');
+          }
+        };
+
+        const spy = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) visible.add(e.target.id);
+              else visible.delete(e.target.id);
+            }
+            // Activa la última sección (la más baja en orden del documento) que
+            // esté visible: la que realmente ocupa la banda, no el borde de la
+            // sección anterior que asoma por arriba.
+            let active: string | undefined;
+            for (let i = sectionIds.length - 1; i >= 0; i--) {
+              if (visible.has(sectionIds[i])) {
+                active = sectionIds[i];
+                break;
+              }
+            }
+            if (active) setActive(active);
+          },
+          { rootMargin: `-${navH + 8}px 0px -60% 0px`, threshold: 0 }
+        );
+        sections.forEach((s) => spy.observe(s));
+      }
+    </script>
+  </body>
+</html>

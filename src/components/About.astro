@@ -1,0 +1,144 @@
+---
+import { Image } from 'astro:assets';
+// Para cambiar de foto, sustituye este import (p. ej. por '../assets/alvaro-gris.jpg').
+import alvaroPhoto from '../assets/alvaro.jpg';
+
+const photoAlt = 'Álvaro Gutiérrez García, desarrollador de software';
+---
+
+<section id="sobre-mi" class="about">
+  <div class="container">
+    <header class="section-head reveal">
+      <span class="section-head__num">01</span>
+      <h2 class="section-head__title">Sobre mí</h2>
+    </header>
+
+    <div class="about__inner">
+      <div class="about__text">
+        <p class="about__p reveal" style="--reveal-delay: 60ms">
+          Soy Álvaro, desarrollador de software en
+          <strong class="about__kw">ICCA (Córdoba)</strong>, donde trabajo a
+          diario con <strong class="about__kw">.NET</strong> y
+          <strong class="about__kw">Angular</strong>.
+        </p>
+
+        <p class="about__p reveal" style="--reveal-delay: 140ms">
+          Me muevo en la intersección entre el desarrollo y la inteligencia
+          artificial: estoy cursando un
+          <strong class="about__kw">máster en Big Data e IA aplicada al deporte</strong>
+          y me interesa especialmente llevar el
+          <strong class="about__kw">Machine Learning</strong>, la
+          <strong class="about__kw">Computer Vision</strong> y los
+          <strong class="about__kw">LLMs</strong> a problemas reales.
+        </p>
+
+        <p class="about__p reveal" style="--reveal-delay: 220ms">
+          Soy <strong class="about__kw">Ingeniero Informático por la Universidad
+          de Córdoba</strong>. Antes de dedicarme al desarrollo fui redactor SEO,
+          y sigo siendo <strong class="about__kw">entrenador de baloncesto
+          certificado por la FAB</strong> — una mezcla que me da una forma poco
+          habitual de entender tanto el producto como el deporte.
+        </p>
+      </div>
+
+      <div class="about__media reveal" style="--reveal-delay: 120ms">
+        <figure class="about__photo">
+          <Image
+            class="about__img"
+            src={alvaroPhoto}
+            alt={photoAlt}
+            widths={[300, 360, 540, 720]}
+            sizes="(max-width: 900px) 300px, 360px"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: var(--space-9);
+    scroll-margin-top: var(--nav-height);
+  }
+
+  .about__inner {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  /* --- Texto --- */
+  .about__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .about__p {
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+    line-height: var(--lh-normal);
+    max-width: 60ch;
+  }
+  /* Términos clave: más brillantes que el texto de alrededor, sin saturar */
+  .about__kw {
+    color: var(--text);
+    font-weight: var(--fw-semibold);
+  }
+
+  /* --- Foto --- */
+  .about__media {
+    display: flex;
+    justify-content: center;
+  }
+  .about__photo {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 4 / 5;
+    margin: 0;
+  }
+  /* Marco de acento desplazado detrás de la foto */
+  .about__photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(14px, 14px);
+    border: 1.5px solid var(--accent);
+    border-radius: var(--radius-lg);
+    opacity: 0.55;
+    z-index: 0;
+    transition: transform var(--transition-slow);
+  }
+  .about__photo:hover::before {
+    transform: translate(10px, 10px);
+  }
+
+  .about__img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    object-fit: cover;
+  }
+
+  /* ======================= RESPONSIVE ======================= */
+  @media (max-width: 900px) {
+    .about__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+    .about__media {
+      order: -1; /* la foto arriba en móvil */
+    }
+    .about__photo {
+      max-width: 300px;
+    }
+  }
+</style>
