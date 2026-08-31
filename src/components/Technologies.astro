@@ -6,6 +6,16 @@
 // disponible pesa 10-50kB por ser un único path hiperdetallado): se usan
 // iconos de línea propios y coherentes.
 
+import type { Lang } from '../i18n/ui';
+import { sectionId, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
 type Icon = {
   name: string;
   viewBox: string;
@@ -207,25 +217,31 @@ const vscode: Icon = {
 };
 
 const categories: { title: string; items: Icon[] }[] = [
-  { title: 'Backend', items: [dotnet, csharp, sqlserver, mysql, cpp, solidity] },
-  { title: 'Frontend', items: [angular, typescript] },
   {
-    title: 'Datos e IA',
+    title: t.tech.categories.backend,
+    items: [dotnet, csharp, sqlserver, mysql, cpp, solidity],
+  },
+  { title: t.tech.categories.frontend, items: [angular, typescript] },
+  {
+    title: t.tech.categories.data,
     items: [python, numpy, pandas, scikitlearn, tensorflow, machineLearning, computerVision, llms],
   },
-  { title: 'Herramientas', items: [git, github, vscode, postman, n8n, microsoftOffice] },
-  { title: 'Prácticas', items: [scrum, kanban] },
+  {
+    title: t.tech.categories.tools,
+    items: [git, github, vscode, postman, n8n, microsoftOffice],
+  },
+  { title: t.tech.categories.practices, items: [scrum, kanban] },
 ];
 
 // Índice global para escalonar la animación de aparición a través de toda la rejilla.
 let i = 0;
 ---
 
-<section id="tecnologias" class="tech">
+<section id={sectionId(lang, 'tech')} class="tech">
   <div class="container">
     <header class="section-head reveal">
       <span class="section-head__num">03</span>
-      <h2 class="section-head__title">Tecnologías</h2>
+      <h2 class="section-head__title">{t.tech.title}</h2>
     </header>
 
     <div class="tech__categories">

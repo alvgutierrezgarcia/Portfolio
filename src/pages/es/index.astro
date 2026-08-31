@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import About from '../../components/About.astro';
+import Experience from '../../components/Experience.astro';
+import Technologies from '../../components/Technologies.astro';
+import Projects from '../../components/Projects.astro';
+import Contact from '../../components/Contact.astro';
+
+// Versión en español. El idioma por defecto (inglés) vive en /.
+const lang = 'es' as const;
+---
+
+<Layout lang={lang}>
+  {/*
+    Misma página que la home en inglés, con los textos y los anclajes
+    (#inicio, #sobre-mi, #experiencia, #tecnologias, #proyectos, #contacto)
+    del diccionario en español (ver src/i18n/ui.ts).
+  */}
+
+  <Hero lang={lang} />
+
+  <About lang={lang} />
+
+  <Experience lang={lang} />
+
+  <Technologies lang={lang} />
+
+  <Projects lang={lang} />
+
+  <Contact lang={lang} />
+</Layout>

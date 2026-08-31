@@ -1,17 +1,27 @@
 ---
-const links = [
-  { href: '#inicio', label: 'Inicio' },
-  { href: '#sobre-mi', label: 'Sobre mí' },
-  { href: '#experiencia', label: 'Experiencia' },
-  { href: '#tecnologias', label: 'Tecnologías' },
-  { href: '#proyectos', label: 'Proyectos' },
-  { href: '#contacto', label: 'Contacto' },
-];
+import type { Lang } from '../i18n/ui';
+import { homeUrl, otherLang, sectionHref, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const links = (
+  ['home', 'about', 'experience', 'tech', 'projects', 'contact'] as const
+).map((key) => ({ href: sectionHref(lang, key), label: t.nav.links[key] }));
+
+// Enlace al otro idioma: lleva a su home (los anclajes cambian de slug entre
+// idiomas, así que no se puede conservar la sección sin JS extra).
+const altLang = otherLang(lang);
+const altHref = homeUrl(altLang);
 ---
 
 <header class="nav" data-nav>
-  <nav class="nav__inner container" aria-label="Navegación principal">
-    <a class="brand" href="#inicio">
+  <nav class="nav__inner container" aria-label={t.nav.ariaLabel}>
+    <a class="brand" href={sectionHref(lang, 'home')}>
       Álvaro<span class="brand__dot" aria-hidden="true">.</span>
     </a>
 
@@ -28,12 +38,28 @@ const links = [
     </ul>
 
     <div class="nav__actions">
+      <a
+        class="lang-switch"
+        href={altHref}
+        hreflang={altLang}
+        lang={altLang}
+        aria-label={t.nav.langSwitchAria}
+        title={t.nav.langSwitchAria}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3.6 9h16.8M3.6 15h16.8" />
+          <path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18Z" />
+        </svg>
+        <span class="lang-switch__label">{t.nav.langSwitchLabel}</span>
+      </a>
+
       <button
         type="button"
         class="theme-toggle"
         data-theme-toggle
-        aria-label="Cambiar tema claro/oscuro"
-        title="Cambiar tema"
+        aria-label={t.nav.themeToggleLabel}
+        title={t.nav.themeToggleTitle}
       >
         <span class="theme-toggle__icon sun" aria-hidden="true">☀️</span>
         <span class="theme-toggle__icon moon" aria-hidden="true">🌙</span>
@@ -43,7 +69,9 @@ const links = [
         type="button"
         class="nav__burger"
         data-nav-burger
-        aria-label="Abrir menú"
+        aria-label={t.nav.openMenu}
+        data-label-open={t.nav.openMenu}
+        data-label-close={t.nav.closeMenu}
         aria-expanded="false"
         aria-controls="nav-menu"
       >
@@ -146,6 +174,38 @@ const links = [
     gap: var(--space-2);
   }
 
+  /* --- Cambio de idioma --- */
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: 2.5rem;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    transition:
+      color var(--transition),
+      background-color var(--transition),
+      border-color var(--transition),
+      transform var(--transition);
+  }
+  .lang-switch:hover {
+    color: var(--text);
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+  .lang-switch svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+  }
+
   .theme-toggle {
     display: inline-grid;
     place-items: center;
@@ -222,6 +282,20 @@ const links = [
       display: grid;
     }
 
+    /* Con la hamburguesa a la vista el espacio aprieta: dejamos solo el icono. */
+    .lang-switch {
+      width: 2.5rem;
+      padding-inline: 0;
+      justify-content: center;
+    }
+    .lang-switch__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
     .nav__links {
       position: absolute;
       top: var(--nav-height);
@@ -296,17 +370,21 @@ const links = [
   const nav = document.querySelector<HTMLElement>('[data-nav]');
   const burger = document.querySelector<HTMLButtonElement>('[data-nav-burger]');
 
+  // Etiquetas traducidas: vienen del servidor en data-* (ver Navbar.astro).
+  const labelOpen = burger?.dataset.labelOpen ?? 'Open menu';
+  const labelClose = burger?.dataset.labelClose ?? 'Close menu';
+
   const closeMenu = () => {
     nav?.classList.remove('is-open');
     burger?.setAttribute('aria-expanded', 'false');
-    burger?.setAttribute('aria-label', 'Abrir menú');
+    burger?.setAttribute('aria-label', labelOpen);
   };
 
   burger?.addEventListener('click', () => {
     const willOpen = !nav?.classList.contains('is-open');
     nav?.classList.toggle('is-open', willOpen);
     burger.setAttribute('aria-expanded', String(willOpen));
-    burger.setAttribute('aria-label', willOpen ? 'Cerrar menú' : 'Abrir menú');
+    burger.setAttribute('aria-label', willOpen ? labelClose : labelOpen);
   });
 
   // Cerrar el menú al pulsar un enlace o la tecla Escape

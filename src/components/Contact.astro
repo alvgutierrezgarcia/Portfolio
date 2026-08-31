@@ -1,30 +1,67 @@
 ---
 import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
+import type { Lang } from '../i18n/ui';
+import { sectionId, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Los mensajes del validador y del envío se consumen desde el script de
+// cliente vía data-* (evita duplicar los textos en JS).
+const messages = {
+  errName: t.contact.errors.name,
+  errEmail: t.contact.errors.email,
+  errEmailInvalid: t.contact.errors.emailInvalid,
+  errMessage: t.contact.errors.message,
+  errMessageShort: t.contact.errors.messageShort,
+  statusSent: t.contact.status.sent,
+  statusError: t.contact.status.error,
+  statusGenericFail: t.contact.status.genericFail,
+  // El asunto lleva el nombre; usamos un marcador que el script sustituye.
+  subject: t.contact.emailSubject('{name}'),
+};
 ---
 
-<section id="contacto" class="contact">
+<section id={sectionId(lang, 'contact')} class="contact">
   <div class="container">
     <header class="section-head reveal">
       <span class="section-head__num">05</span>
-      <h2 class="section-head__title">Contacto</h2>
+      <h2 class="section-head__title">{t.contact.title}</h2>
     </header>
 
     <div class="contact__inner">
-      <form class="contact__form reveal" data-contact-form novalidate>
+      <form
+        class="contact__form reveal"
+        data-contact-form
+        novalidate
+        data-err-name={messages.errName}
+        data-err-email={messages.errEmail}
+        data-err-email-invalid={messages.errEmailInvalid}
+        data-err-message={messages.errMessage}
+        data-err-message-short={messages.errMessageShort}
+        data-status-sent={messages.statusSent}
+        data-status-error={messages.statusError}
+        data-status-generic-fail={messages.statusGenericFail}
+        data-subject={messages.subject}
+      >
         <div class="field">
-          <label for="name">Nombre</label>
+          <label for="name">{t.contact.name}</label>
           <input id="name" name="name" type="text" autocomplete="name" required />
           <p class="field__error" data-error-for="name"></p>
         </div>
 
         <div class="field">
-          <label for="email">Correo</label>
+          <label for="email">{t.contact.email}</label>
           <input id="email" name="email" type="email" autocomplete="email" required />
           <p class="field__error" data-error-for="email"></p>
         </div>
 
         <div class="field">
-          <label for="message">Mensaje</label>
+          <label for="message">{t.contact.message}</label>
           <textarea id="message" name="message" rows="5" required></textarea>
           <p class="field__error" data-error-for="message"></p>
         </div>
@@ -41,14 +78,14 @@ import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
 
         <button type="submit" class="btn btn--primary contact__submit">
           <span class="contact__spinner" aria-hidden="true"></span>
-          <span class="contact__submit-label">Enviar</span>
+          <span class="contact__submit-label">{t.contact.submit}</span>
         </button>
 
         <p class="contact__status" data-status role="status" aria-live="polite"></p>
       </form>
 
       <aside class="contact__direct reveal" style="--reveal-delay:120ms">
-        <p class="contact__direct-lead">O escríbeme directamente</p>
+        <p class="contact__direct-lead">{t.contact.directLead}</p>
         <ul class="contact__links">
           <li>
             <a class="contact__link" href={`mailto:${EMAIL}`}>
@@ -73,7 +110,7 @@ import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
               </span>
               <span class="contact__link-text">
                 <span class="contact__link-label">LinkedIn</span>
-                <span class="contact__link-value">Ver perfil</span>
+                <span class="contact__link-value">{t.contact.viewProfile}</span>
               </span>
             </a>
           </li>
@@ -86,7 +123,7 @@ import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
               </span>
               <span class="contact__link-text">
                 <span class="contact__link-label">GitHub</span>
-                <span class="contact__link-value">Ver perfil</span>
+                <span class="contact__link-value">{t.contact.viewProfile}</span>
               </span>
             </a>
           </li>
@@ -319,6 +356,18 @@ import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
 
   if (form) {
     const status = form.querySelector<HTMLParagraphElement>('[data-status]')!;
+    // Textos traducidos inyectados por el servidor (ver Contact.astro).
+    const msg = {
+      name: form.dataset.errName ?? '',
+      email: form.dataset.errEmail ?? '',
+      emailInvalid: form.dataset.errEmailInvalid ?? '',
+      message: form.dataset.errMessage ?? '',
+      messageShort: form.dataset.errMessageShort ?? '',
+      sent: form.dataset.statusSent ?? '',
+      error: form.dataset.statusError ?? '',
+      genericFail: form.dataset.statusGenericFail ?? '',
+      subject: form.dataset.subject ?? '{name}',
+    };
     const fields = {
       name: form.elements.namedItem('name') as HTMLInputElement,
       email: form.elements.namedItem('email') as HTMLInputElement,
@@ -355,21 +404,21 @@ import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
       const message = fields.message.value.trim();
 
       if (!name) {
-        showError('name', 'Escribe tu nombre.');
+        showError('name', msg.name);
         valid = false;
       }
       if (!email) {
-        showError('email', 'Escribe tu correo.');
+        showError('email', msg.email);
         valid = false;
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showError('email', 'Ese correo no parece válido.');
+        showError('email', msg.emailInvalid);
         valid = false;
       }
       if (!message) {
-        showError('message', 'Escribe un mensaje.');
+        showError('message', msg.message);
         valid = false;
       } else if (message.length < 10) {
-        showError('message', 'Cuéntame un poco más (mínimo 10 caracteres).');
+        showError('message', msg.messageShort);
         valid = false;
       }
       return valid;
@@ -394,7 +443,7 @@ import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
             access_key: WEB3FORMS_ACCESS_KEY,
-            subject: `Nuevo mensaje de ${name} — portfolio`,
+            subject: msg.subject.replace('{name}', name),
             from_name: name,
             name,
             email: fields.email.value.trim(),
@@ -407,15 +456,14 @@ import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
 
         if (data.success) {
           setState('sent');
-          status.textContent = '¡Mensaje enviado! Te responderé en cuanto pueda.';
+          status.textContent = msg.sent;
           form.reset();
         } else {
-          throw new Error(data.message || 'No se pudo enviar el mensaje.');
+          throw new Error(data.message || msg.genericFail);
         }
       } catch (err) {
         setState('error');
-        status.textContent =
-          'Algo ha fallado al enviar el mensaje. Inténtalo de nuevo o escríbeme directamente por email.';
+        status.textContent = msg.error;
       } finally {
         const isSending = false;
         fields.name.disabled = isSending;

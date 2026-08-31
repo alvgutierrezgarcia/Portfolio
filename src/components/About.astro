@@ -2,54 +2,39 @@
 import { Image } from 'astro:assets';
 // Para cambiar de foto, sustituye este import (p. ej. por '../assets/alvaro-gris.jpg').
 import alvaroPhoto from '../assets/alvaro.jpg';
+import type { Lang } from '../i18n/ui';
+import { sectionId, useTranslations } from '../i18n/utils';
 
-const photoAlt = 'Álvaro Gutiérrez García, desarrollador de software';
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const photoAlt = t.about.photoAlt;
 ---
 
-<section id="sobre-mi" class="about">
+<section id={sectionId(lang, 'about')} class="about">
   <div class="container">
     <header class="section-head reveal">
       <span class="section-head__num">01</span>
-      <h2 class="section-head__title">Sobre mí</h2>
+      <h2 class="section-head__title">{t.about.title}</h2>
     </header>
 
     <div class="about__inner">
       <div class="about__text">
-        <p class="about__p reveal" style="--reveal-delay: 60ms">
-          Soy un ingeniero de software centrado en el producto: me importa
-          menos en qué capa vive el código y más si lo que lanzamos marca una
-          diferencia real. Los problemas que abordo están en la intersección
-          entre <strong class="about__kw">producto</strong>,
-          <strong class="about__kw">diseño</strong> e
-          <strong class="about__kw">ingeniería</strong> — qué estamos
-          resolviendo, para quién, y cómo sabemos que ha funcionado.
-        </p>
-
-        <p class="about__p reveal" style="--reveal-delay: 140ms">
-          Mi forma habitual de trabajar es iterar: prefiero poner en manos de
-          usuarios reales una parte pequeña pero completa del producto y
-          aprender de su feedback, antes que pulir algo que nadie ha pedido.
-          Esto se apoya en las prácticas que hacen posible lanzar rápido y con
-          seguridad: <strong class="about__kw">CI/CD</strong>, ciclos de
-          feedback cortos y hábitos de
-          <strong class="about__kw">Programación Extrema</strong>, como
-          pruebas honestas y pasos pequeños y reversibles.
-        </p>
-
-        <p class="about__p reveal" style="--reveal-delay: 220ms">
-          Cada vez más, buena parte de ese desarrollo lo hago con IA. Diseño
-          flujos de trabajo con agentes que llevan una idea hasta un PR
-          revisado en menos tiempo, dejando que los
-          <strong class="about__kw">LLMs</strong> planifiquen, escriban y
-          prueben código — siempre con una persona en el bucle antes de
-          lanzar nada.
-        </p>
-
-        <p class="about__p reveal" style="--reveal-delay: 300ms">
-          Lo que no negocio: <strong class="about__kw">accesibilidad</strong>,
-          <strong class="about__kw">rendimiento</strong>, pruebas que digan la
-          verdad, y una IA que se gane su sitio en código de producción real.
-        </p>
+        {
+          /* El HTML de cada párrafo es contenido propio del diccionario i18n
+             (build-time, sin entrada de usuario): solo resalta términos con
+             <strong class="about__kw">. */
+          t.about.paragraphs.map((html, i) => (
+            <p
+              class="about__p reveal"
+              style={`--reveal-delay: ${60 + i * 80}ms`}
+              set:html={html}
+            />
+          ))
+        }
       </div>
 
       <div class="about__media reveal" style="--reveal-delay: 120ms">

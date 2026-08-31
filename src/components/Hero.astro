@@ -1,11 +1,20 @@
 ---
 import { LINKEDIN_URL } from '../data/contact';
+import type { Lang } from '../i18n/ui';
+import { sectionHref, sectionId, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 
 const cvUrl = '/cv-alvaro-gutierrez-garcia.pdf';
 const linkedinUrl = LINKEDIN_URL;
 ---
 
-<section id="inicio" class="hero" aria-labelledby="hero-title">
+<section id={sectionId(lang, 'home')} class="hero" aria-labelledby="hero-title">
   <!-- Fondo con movimiento sutil (mesh gradient). Decorativo → aria-hidden. -->
   <div class="hero__bg" aria-hidden="true">
     <span class="blob blob--1"></span>
@@ -17,7 +26,7 @@ const linkedinUrl = LINKEDIN_URL;
   <div class="hero__content container">
     <p class="hero__badge">
       <span class="hero__dot" aria-hidden="true"></span>
-      Disponible para proyectos
+      {t.hero.badge}
     </p>
 
     <h1 id="hero-title" class="hero__title">
@@ -25,24 +34,23 @@ const linkedinUrl = LINKEDIN_URL;
     </h1>
 
     <p class="hero__subtitle">
-      Desarrollador de software - Human-in-the-loop AI
+      {t.hero.subtitle}
     </p>
 
     <p class="hero__desc">
-      Construyo software y aplico Machine Learning, Computer Vision y LLMs a
-      problemas reales, con un pie en la ingeniería y otro en el deporte.
+      {t.hero.description}
     </p>
 
     <div class="hero__actions">
-      <a class="btn btn--primary" href="#proyectos">
-        Ver proyectos
+      <a class="btn btn--primary" href={sectionHref(lang, 'projects')}>
+        {t.hero.ctaProjects}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h14M13 6l6 6-6 6" />
         </svg>
       </a>
 
       <a class="btn btn--secondary" href={cvUrl} download>
-        Descargar CV
+        {t.hero.ctaCv}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
         </svg>
@@ -57,7 +65,7 @@ const linkedinUrl = LINKEDIN_URL;
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
         </svg>
-        LinkedIn
+        {t.hero.ctaLinkedin}
       </a>
     </div>
   </div>

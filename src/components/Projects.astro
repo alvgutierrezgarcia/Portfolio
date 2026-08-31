@@ -1,12 +1,22 @@
 ---
-import { projects } from '../data/projects';
+import { getProjects } from '../data/projects';
+import type { Lang } from '../i18n/ui';
+import { sectionId, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const projects = getProjects(lang);
 ---
 
-<section id="proyectos" class="projects">
+<section id={sectionId(lang, 'projects')} class="projects">
   <div class="container">
     <header class="section-head reveal">
       <span class="section-head__num">04</span>
-      <h2 class="section-head__title">Proyectos</h2>
+      <h2 class="section-head__title">{t.projects.title}</h2>
     </header>
 
     <ul class="projects__grid">
@@ -22,7 +32,7 @@ import { projects } from '../data/projects';
                 <img
                   class="project-card__img"
                   src={p.image}
-                  alt={`Vista previa de ${p.title}`}
+                  alt={t.projects.previewAlt(p.title)}
                   width="800"
                   height="500"
                   loading="lazy"
@@ -58,7 +68,7 @@ import { projects } from '../data/projects';
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {p.linkLabel ?? 'Ver proyecto'}
+                    {p.linkLabel ?? t.projects.defaultLinkLabel}
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <path d="M7 17 17 7M8 7h9v9" />
                     </svg>
@@ -69,7 +79,7 @@ import { projects } from '../data/projects';
                       <rect x="4" y="10" width="16" height="10" rx="2" />
                       <path d="M8 10V7a4 4 0 0 1 8 0v3" />
                     </svg>
-                    {p.note ?? 'Proyecto privado'}
+                    {p.note ?? t.projects.defaultNote}
                   </span>
                 )}
               </div>

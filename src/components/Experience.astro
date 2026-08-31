@@ -1,40 +1,30 @@
 ---
-const masterYears = '2025';
+import type { Lang } from '../i18n/ui';
+import { sectionId, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 
 type Milestone = {
   role: string;
   place: string;
   dates: string;
-  current?: boolean;
   note?: string;
 };
 
-const milestones: Milestone[] = [
-  {
-    role: 'Desarrollador de software',
-    place: 'ICCA, Córdoba',
-    dates: 'julio 2024 – Actualidad',
-    current: true,
-  },
-  {
-    role: 'Máster en Big Data e IA aplicada al deporte',
-    place: 'Sports Data Campus · Olocip · UCAM',
-    dates: masterYears,
-  },
-  {
-    role: 'Ingeniería Informática',
-    place: 'Universidad de Córdoba',
-    dates: '2020 – 2024',
-    note: 'Erasmus — Politechnika Opolska, Opole (Polonia) · 2022',
-  },
-];
+// Los textos vienen del diccionario i18n; el primer hito es siempre el actual.
+const milestones = t.experience.milestones as readonly Milestone[];
 ---
 
-<section id="experiencia" class="experience">
+<section id={sectionId(lang, 'experience')} class="experience">
   <div class="container">
     <header class="section-head reveal">
       <span class="section-head__num">02</span>
-      <h2 class="section-head__title">Experiencia</h2>
+      <h2 class="section-head__title">{t.experience.title}</h2>
     </header>
 
     <ol class="timeline">
@@ -42,13 +32,15 @@ const milestones: Milestone[] = [
         milestones.map((m, i) => (
           <li class="timeline__item reveal" style={`--reveal-delay:${i * 120}ms`}>
             <span
-              class:list={['timeline__dot', m.current && 'timeline__dot--current']}
+              class:list={['timeline__dot', i === 0 && 'timeline__dot--current']}
               aria-hidden="true"
             />
             <div class="timeline__card">
               <div class="timeline__head">
                 <h3 class="timeline__role">{m.role}</h3>
-                {m.current && <span class="timeline__badge">Actual</span>}
+                {i === 0 && (
+                  <span class="timeline__badge">{t.experience.currentBadge}</span>
+                )}
               </div>
               <p class="timeline__place">{m.place}</p>
               <p class="timeline__dates">{m.dates}</p>

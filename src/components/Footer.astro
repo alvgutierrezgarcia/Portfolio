@@ -1,5 +1,14 @@
 ---
 import { LINKEDIN_URL, GITHUB_URL } from '../data/contact';
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 
 const socials = [
   {
@@ -20,7 +29,7 @@ const year = new Date().getFullYear();
   <div class="footer__inner container">
     <div class="footer__brand">
       <span class="footer__name">© {year} Álvaro</span>
-      <span class="footer__role">Desarrollador de software · ICCA</span>
+      <span class="footer__role">{t.footer.role}</span>
     </div>
 
     <ul class="footer__socials">

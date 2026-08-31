@@ -3,24 +3,34 @@ import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { EMAIL, LINKEDIN_URL, GITHUB_URL } from '../data/contact';
+import { localeMeta, type Lang } from '../i18n/ui';
+import { homeUrl, sectionHref, useTranslations } from '../i18n/utils';
 
 interface Props {
+  lang: Lang;
   title?: string;
   description?: string;
   /** Ruta relativa a /public para la imagen Open Graph (opcional). */
   image?: string;
 }
 
-const {
-  title = 'Álvaro Gutiérrez García — Desarrollador de software',
-  description = 'Portfolio de Álvaro Gutiérrez García, desarrollador de software en ICCA (Córdoba), especializado en desarrollo con IA, .NET, Angular e IA aplicada al deporte.',
-  image = '/og.png',
-} = Astro.props;
+const { lang, image = '/og.png' } = Astro.props;
+const t = useTranslations(lang);
+
+const title = Astro.props.title ?? t.meta.title;
+const description = Astro.props.description ?? t.meta.description;
 
 // URL canónica y absolutas para SEO / Open Graph.
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImage = new URL(image, Astro.site);
 const siteURL = Astro.site?.href ?? canonicalURL.href;
+
+// Alternates hreflang: cada idioma + x-default apuntando al idioma por defecto.
+const alternates = [
+  { hreflang: 'en', href: new URL(homeUrl('en'), Astro.site).href },
+  { hreflang: 'es', href: new URL(homeUrl('es'), Astro.site).href },
+  { hreflang: 'x-default', href: new URL(homeUrl('en'), Astro.site).href },
+];
 
 // Datos estructurados (JSON-LD) tipo Person.
 const personSchema = {
@@ -29,7 +39,7 @@ const personSchema = {
   name: 'Álvaro Gutiérrez García',
   givenName: 'Álvaro',
   familyName: 'Gutiérrez García',
-  jobTitle: 'Desarrollador de software',
+  jobTitle: t.meta.jobTitle,
   description,
   url: siteURL,
   image: socialImage.href,
@@ -47,21 +57,13 @@ const personSchema = {
     { '@type': 'CollegeOrUniversity', name: 'Universidad de Córdoba' },
     { '@type': 'EducationalOrganization', name: 'Sports Data Campus · UCAM · OLOCIP' },
   ],
-  knowsAbout: [
-    'Inteligencia Artificial',
-    '.NET',
-    'Angular',
-    'Machine Learning',
-    'Computer Vision',
-    'LLMs',
-    'IA aplicada al deporte',
-  ],
+  knowsAbout: t.meta.knowsAbout,
   sameAs: [LINKEDIN_URL, GITHUB_URL].filter((u) => u && u !== '#'),
 };
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={localeMeta[lang].htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -96,6 +98,13 @@ const personSchema = {
     <meta name="theme-color" content="#0b0d10" />
     <meta name="author" content="Álvaro Gutiérrez García" />
 
+    <!-- Versiones por idioma (hreflang) -->
+    {
+      alternates.map((alt) => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
+
     <!-- Iconos -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -104,14 +113,14 @@ const personSchema = {
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={localeMeta[lang].ogLocale} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Álvaro Gutiérrez García — Desarrollador de software" />
+    <meta property="og:image:alt" content={t.meta.ogImageAlt} />
     <meta property="og:site_name" content="Álvaro Gutiérrez García" />
 
     <!-- Twitter -->
@@ -119,7 +128,7 @@ const personSchema = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
-    <meta name="twitter:image:alt" content="Álvaro Gutiérrez García — Desarrollador de software" />
+    <meta name="twitter:image:alt" content={t.meta.ogImageAlt} />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -128,12 +137,12 @@ const personSchema = {
   </head>
 
   <body>
-    <a class="skip-link" href="#inicio">Saltar al contenido</a>
-    <Navbar />
+    <a class="skip-link" href={sectionHref(lang, 'home')}>{t.nav.skipToContent}</a>
+    <Navbar lang={lang} />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
 
     <script>
       const supportsIO = 'IntersectionObserver' in window;

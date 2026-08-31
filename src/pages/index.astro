@@ -7,27 +7,27 @@ import Technologies from '../components/Technologies.astro';
 import Projects from '../components/Projects.astro';
 import Contact from '../components/Contact.astro';
 
-const title = 'Álvaro Gutiérrez García — Desarrollador de software (.NET · Angular · IA)';
-const description =
-  'Desarrollador de software en ICCA (Córdoba). Construyo con .NET y Angular y aplico Machine Learning, Computer Vision y LLMs a problemas reales, con un pie en la ingeniería y otro en el deporte.';
+// Idioma por defecto: inglés. La versión en español vive en /es/.
+const lang = 'en' as const;
 ---
 
-<Layout title={title} description={description}>
+<Layout lang={lang}>
   {/*
     Página principal (one-page). Cada sección es un componente con su propio
-    anclaje (#sobre-mi, #experiencia, #tecnologias, #proyectos, #contacto),
-    enlazado desde la barra de navegación con scroll suave.
+    anclaje (#about, #experience, #tech, #projects, #contact), enlazado desde
+    la barra de navegación con scroll suave. Los slugs de los anclajes se
+    traducen por idioma (ver src/i18n/ui.ts).
   */}
 
-  <Hero />
+  <Hero lang={lang} />
 
-  <About />
+  <About lang={lang} />
 
-  <Experience />
+  <Experience lang={lang} />
 
-  <Technologies />
+  <Technologies lang={lang} />
 
-  <Projects />
+  <Projects lang={lang} />
 
-  <Contact />
+  <Contact lang={lang} />
 </Layout>
