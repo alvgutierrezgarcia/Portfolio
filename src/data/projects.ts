@@ -59,7 +59,7 @@ export const projects: Project[] = [
     image: '/proyectos/cinematch.webp',
   },
   {
-    title: 'License Plate Tracker',
+    title: 'Rastreador de matrículas',
     description:
       'Aplicación web para un reto entre amigos de cazar matrículas en foto. Construida con Supabase y Vercel.',
     tags: ['Supabase', 'Vercel', 'JavaScript'],

@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   // Cambia esto a tu dominio final cuando lo tengas: es la base para el
   // sitemap, las URLs canónicas y las etiquetas Open Graph.
-  site: 'https://alvaro.dev',
+  site: 'https://alvaro-gutierrez-garcia-portfolio.vercel.app/',
   integrations: [sitemap()],
   // Minimiza el HTML generado (prioridad: rendimiento).
   compressHTML: true,
