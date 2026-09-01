@@ -56,9 +56,9 @@ const en = {
   // --- Hero -------------------------------------------------------------
   hero: {
     badge: 'Available for projects',
-    subtitle: 'Software Engineer — Human-in-the-loop AI',
+    subtitle: 'Software Engineer — Agentic AI & Automation',
     description:
-      'I build software and apply Machine Learning, Computer Vision and LLMs to real problems, with one foot in engineering and the other in sport.',
+      'I design agentic AI and automation workflows — always human-in-the-loop — with one foot in engineering and the other in sport.',
     ctaProjects: 'View projects',
     ctaCv: 'Download CV',
     ctaLinkedin: 'LinkedIn',
@@ -153,18 +153,20 @@ const en = {
 
   // --- SEO / <head> -----------------------------------------------------
   meta: {
-    title: 'Álvaro Gutiérrez García — Software Engineer (.NET · Angular · AI)',
+    title: 'Álvaro Gutiérrez García — Software Engineer | Agentic AI & Automation',
     description:
-      'Software engineer at ICCA (Córdoba). I build with .NET and Angular and apply Machine Learning, Computer Vision and LLMs to real problems, with one foot in engineering and the other in sport.',
-    ogImageAlt: 'Álvaro Gutiérrez García — Software Engineer',
+      'Software engineer at ICCA (Córdoba). I build agentic AI and automation workflows, always human-in-the-loop, and apply AI to sport.',
+    ogImageAlt: 'Álvaro Gutiérrez García — Software Engineer · Agentic AI & Automation',
     jobTitle: 'Software Engineer',
     knowsAbout: [
+      'Agentic AI',
+      'AI Automation',
+      'Human-in-the-loop',
+      'LLMs',
       'Artificial Intelligence',
+      'Machine Learning',
       '.NET',
       'Angular',
-      'Machine Learning',
-      'Computer Vision',
-      'LLMs',
       'AI applied to sport',
     ],
   },
@@ -208,9 +210,9 @@ const es: UIStrings = {
 
   hero: {
     badge: 'Disponible para proyectos',
-    subtitle: 'Desarrollador de software — Human-in-the-loop AI',
+    subtitle: 'Desarrollador de software — IA agéntica y automatización',
     description:
-      'Construyo software y aplico Machine Learning, Computer Vision y LLMs a problemas reales, con un pie en la ingeniería y otro en el deporte.',
+      'Diseño flujos de trabajo de IA agéntica y automatización —siempre human-in-the-loop— con un pie en la ingeniería y otro en el deporte.',
     ctaProjects: 'Ver proyectos',
     ctaCv: 'Descargar CV',
     ctaLinkedin: 'LinkedIn',
@@ -297,18 +299,20 @@ const es: UIStrings = {
   },
 
   meta: {
-    title: 'Álvaro Gutiérrez García — Desarrollador de software (.NET · Angular · IA)',
+    title: 'Álvaro Gutiérrez García — Desarrollador de software | IA agéntica y automatización',
     description:
-      'Desarrollador de software en ICCA (Córdoba). Construyo con .NET y Angular y aplico Machine Learning, Computer Vision y LLMs a problemas reales, con un pie en la ingeniería y otro en el deporte.',
-    ogImageAlt: 'Álvaro Gutiérrez García — Desarrollador de software',
+      'Desarrollador de software en ICCA (Córdoba). Construyo flujos de IA agéntica y automatización, siempre human-in-the-loop, y aplico la IA al deporte.',
+    ogImageAlt: 'Álvaro Gutiérrez García — Desarrollador de software · IA agéntica y automatización',
     jobTitle: 'Desarrollador de software',
     knowsAbout: [
+      'IA agéntica',
+      'Automatización con IA',
+      'Human-in-the-loop',
+      'LLMs',
       'Inteligencia Artificial',
+      'Machine Learning',
       '.NET',
       'Angular',
-      'Machine Learning',
-      'Computer Vision',
-      'LLMs',
       'IA aplicada al deporte',
     ],
   },
